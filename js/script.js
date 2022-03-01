@@ -31,6 +31,7 @@ let isRunning = true;
 
 async function updateTime(url) {
   isRunning = true;
+  dropdown.style.display = "none";
 
   while (isRunning) {
     await new Promise(f => setTimeout(f, 500));
@@ -43,6 +44,7 @@ const btnReset = document.querySelector("#reset");
 
 function resetTime() {
   isRunning = false;
+  dropdown.style.display = "block";
 }
 
 btnReset.addEventListener("click", resetTime);
@@ -58,7 +60,6 @@ function worldtimeapiFetch(url) {
       lblContinent.textContent = locationName[0];
       lblCity.textContent = locationName[1];
       lblUTC.textContent = "" + res.utc_offset;
-
 
       /*{
   "abbreviation": "CET",
