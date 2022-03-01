@@ -27,15 +27,26 @@ function fillDropdown(url) {
     });
 }
 
-
-
+let isRunning = true;
 
 async function updateTime(url) {
-  while (true) {
-    await new Promise(f => setTimeout(f, 10));
-    worldtimeapiFetch(url)
+  isRunning = true;
+
+  while (isRunning) {
+    await new Promise(f => setTimeout(f, 500));
+    worldtimeapiFetch(url);
   }
+
 }
+
+const btnReset = document.querySelector("#reset");
+
+function resetTime() {
+  isRunning = false;
+}
+
+btnReset.addEventListener("click", resetTime);
+
 
 function worldtimeapiFetch(url) {
   fetch(url)
