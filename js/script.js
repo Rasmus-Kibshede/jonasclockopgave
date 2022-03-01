@@ -1,16 +1,54 @@
 const url = "http://worldtimeapi.org/api/timezone/";
+const dropdown = document.querySelector("#dropdown");
+const lblTime = document.querySelector("#time");
 
-const dropdown = document.getElementById("dropdown");
-dropdown.addEventListener("change", () => {
-  console.log(dropdown.value);
-  worldtimeapiFetch(url + dropdown.value);
-});
 
-const worldtimeapiFetch = function (url) {
+const lblCity = document.querySelector("#timezone-city");
+const lblContinent = document.querySelector("#timezone-continent");
+const lblUTC = document.querySelector("#UTC");
+
+fillDropdown(url);
+
+function fillDropdown(url) {
+  fetch(url)
+    .then(res => res.json())
+    .then((res) => {
+      for (let i = 0; i < res.length; i++) {
+        if (res[i].includes('/') && !res[i].includes("Etc")) {
+          const dropdownOptions = document.createElement("option");
+
+          const locationName = res[i].split("/");
+
+          dropdownOptions.textContent = locationName[0] + " (" + locationName[1] + ")";
+          dropdownOptions.value = res[i];
+          dropdown.appendChild(dropdownOptions);
+        }
+      }
+    });
+}
+
+
+
+
+async function updateTime(url) {
+  while (true) {
+    await new Promise(f => setTimeout(f, 10));
+    worldtimeapiFetch(url)
+  }
+}
+
+function worldtimeapiFetch(url) {
   fetch(url)
     .then((res) => res.json())
     .then((res) => {
-      console.log(res);
+      const locationName = res.timezone.split("/");
+
+      lblTime.textContent = res.datetime.substring(11, 19);
+      lblContinent.textContent = locationName[0];
+      lblCity.textContent = locationName[1];
+      lblUTC.textContent = "" + res.utc_offset;
+
+
       /*{
   "abbreviation": "CET",
   "client_ip": "87.59.14.119",
@@ -30,6 +68,9 @@ const worldtimeapiFetch = function (url) {
         }*/
 
       /*TODO: lav passende attributter ud fra de markerede JSON værdier som kan manipulerer med klokken  */
-      /* Altså vælg tidszone fra drop down, og set uret.
+      /* Altså vælg tidszone fra drop down, og set uret.*/
     });
-};
+}
+
+
+dropdown.addEventListener("change", () => updateTime(url + dropdown.value));
