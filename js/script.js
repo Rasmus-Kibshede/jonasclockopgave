@@ -27,15 +27,21 @@ function fillDropdown(url) {
     });
 }
 
-let isRunning = true;
+let isRunning;
 
 async function updateTime(url) {
   isRunning = true;
   dropdown.style.display = "none";
 
+
   while (isRunning) {
-    await new Promise(f => setTimeout(f, 500));
+    await new Promise(f => setTimeout(f, 1000));
     worldtimeapiFetch(url);
+    //dropdown.addEventListener("change", resetTime);
+    /*const dropdownValue = dropdown.options[dropdown.selectedIndex].value.split("/")[1];
+    if (dropdownValue !== lblCity.innerText) {
+      resetTime();
+    }*/
   }
 
 }
@@ -54,6 +60,7 @@ function worldtimeapiFetch(url) {
   fetch(url)
     .then((res) => res.json())
     .then((res) => {
+
       const locationName = res.timezone.split("/");
 
       lblTime.textContent = res.datetime.substring(11, 19);
