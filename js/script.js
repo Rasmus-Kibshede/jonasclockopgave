@@ -7,16 +7,19 @@ const lblCity = document.querySelector("#timezone-city");
 const lblContinent = document.querySelector("#timezone-continent");
 const lblUTC = document.querySelector("#UTC");
 
+fillDropdown();
 
-fillDropdown(url);
+//combine fillDropdown func
 
-function fillDropdown(url) {
+function fillDropdown() {
+  dropdown_City.style.display = "none";
   let listOfContinents = [];
+
+  //remake the loop (res.foreach) and so on
   fetch(url)
     .then(res => res.json())
-    .then((res) => {
+    .then(res => {
       for (let i = 0; i < res.length; i++) {
-
         const locationName = res[i].split("/");
         if (res[i].includes('/') && !res[i].includes("Etc")) {
           if (!listOfContinents.includes(locationName[0])) {
@@ -37,34 +40,40 @@ function fillDropdownContinent(locationName) {
 
 
 function fillDropdownCity() {
-  console.log(url + dropdown_Continent.value);
+  dropdown_City.style.display = "inline-block";
+
+  //remake the loop (con.foreach) and so on
   fetch(url + dropdown_Continent.value)
     .then(con => con.json())
     .then(con => {
-
       dropdown_City.textContent = "";
+
       for (let i = 0; i < con.length; i++) {
         const locationName = con[i].split("/");
         const dropdownOption = document.createElement("option");
+        const locationNameLength = locationName.length - 1;
 
-        dropdownOption.textContent = locationName[1];
-        dropdownOption.value = locationName[1];
+        //remake so that is dynamic and not static
+        if (locationName.length === 3) {
+          dropdownOption.textContent = locationName[1] + " (" + locationName[locationNameLength] + ")";
+          dropdownOption.value = locationName[1] + "/" + locationName[locationNameLength];
+        } else {
+          dropdownOption.textContent = locationName[locationNameLength];
+          dropdownOption.value = locationName[locationNameLength];
+        }
+
         dropdown_City.appendChild(dropdownOption);
       }
     });
-
 }
 
-
-async function updateTime(url) {
-  while (true) {
-    await new Promise(f => setTimeout(f, 10));
-    worldtimeapiFetch(url)
-  }
+function updateTime() {
+  setTimeout(updateTime, 1000);
+  worldtimeapiFetch()
 }
 
-function worldtimeapiFetch(url) {
-  fetch(url)
+function worldtimeapiFetch() {
+  fetch(url + (dropdown_Continent.value + "/" + dropdown_City.value))
     .then((res) => res.json())
     .then((res) => {
       const locationName = res.timezone.split("/");
@@ -77,4 +86,4 @@ function worldtimeapiFetch(url) {
 }
 
 dropdown_Continent.addEventListener('change', fillDropdownCity);
-dropdown_City.addEventListener("change", () => updateTime(url + (dropdown_Continent.value + "/" + dropdown_City.value)));
+dropdown_City.addEventListener("change", () => updateTime());
