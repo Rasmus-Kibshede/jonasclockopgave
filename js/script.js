@@ -2,7 +2,6 @@ const url = "http://worldtimeapi.org/api/timezone/";
 const dropdown = document.querySelector("#dropdown");
 const lblTime = document.querySelector("#time");
 
-
 const lblCity = document.querySelector("#timezone-city");
 const lblContinent = document.querySelector("#timezone-continent");
 const lblUTC = document.querySelector("#UTC");
@@ -27,37 +26,13 @@ function fillDropdown(url) {
     });
 }
 
-let isRunning;
-
-async function updateTime(url) {
-  isRunning = true;
-  dropdown.style.display = "none";
-
-
-  while (isRunning) {
-    await new Promise(f => setTimeout(f, 1000));
-    worldtimeapiFetch(url);
-    //dropdown.addEventListener("change", resetTime);
-    /*const dropdownValue = dropdown.options[dropdown.selectedIndex].value.split("/")[1];
-    if (dropdownValue !== lblCity.innerText) {
-      resetTime();
-    }*/
-  }
-
+function updateTime() {
+  worldtimeapiFetch();
+  setTimeout(updateTime, 1000);
 }
 
-const btnReset = document.querySelector("#reset");
-
-function resetTime() {
-  isRunning = false;
-  dropdown.style.display = "block";
-}
-
-btnReset.addEventListener("click", resetTime);
-
-
-function worldtimeapiFetch(url) {
-  fetch(url)
+function worldtimeapiFetch() {
+  fetch(url + dropdown.value)
     .then((res) => res.json())
     .then((res) => {
 
