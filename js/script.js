@@ -6,35 +6,28 @@ const lblCity = document.querySelector("#timezone-city");
 const lblContinent = document.querySelector("#timezone-continent");
 const lblUTC = document.querySelector("#UTC");
 
-fillDropdown(url);
+fillDropdown();
 
-function fillDropdown(url) {
+function fillDropdown() {
   fetch(url)
     .then(res => res.json())
-    .then((res) => {
-      for (let i = 0; i < res.length; i++) {
-        if (res[i].includes('/') && !res[i].includes("Etc")) {
-          const dropdownOptions = document.createElement("option");
+    .then(res => res.forEach(data => {
+      if (data.includes('/') && !data.includes("Etc")) {
+        const dropdownOptions = document.createElement("option");
 
-          const locationName = res[i].split("/");
+        const locationName = data.split("/");
 
-          dropdownOptions.textContent = locationName[0] + " (" + locationName[1] + ")";
-          dropdownOptions.value = res[i];
-          dropdown.appendChild(dropdownOptions);
-        }
+        dropdownOptions.textContent = locationName[0] + " (" + locationName[1] + ")";
+        dropdownOptions.value = data;
+        dropdown.appendChild(dropdownOptions);
       }
-    });
-}
-
-function updateTime() {
-  worldtimeapiFetch();
-  setTimeout(updateTime, 1000);
+    }));
 }
 
 function worldtimeapiFetch() {
   fetch(url + dropdown.value)
     .then((res) => res.json())
-    .then((res) => {
+    .then(res => {
 
       const locationName = res.timezone.split("/");
 
@@ -64,7 +57,9 @@ function worldtimeapiFetch() {
       /*TODO: lav passende attributter ud fra de markerede JSON værdier som kan manipulerer med klokken  */
       /* Altså vælg tidszone fra drop down, og set uret.*/
     });
+
+  setTimeout(worldtimeapiFetch, 1000);
 }
 
 
-dropdown.addEventListener("change", () => updateTime(url + dropdown.value));
+dropdown.addEventListener("change", worldtimeapiFetch);
