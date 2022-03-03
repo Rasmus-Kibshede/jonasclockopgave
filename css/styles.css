@@ -80,7 +80,20 @@ span {
   align-self: center;
   justify-self: center;
 }
+
 .timezone-dropdown {
   background-color: #343a40;
   color: white;
 }
+
+/* -------------- themes -------------- */
+.lightTheme {
+  background-color: white;
+  border-color: grey;
+}
+
+
+
+
+
+
