@@ -1,7 +1,6 @@
 const url = "http://worldtimeapi.org/api/timezone/";
 const dropdown = document.querySelector("#dropdown");
 const lblTime = document.querySelector("#time");
-
 const lblCity = document.querySelector("#timezone-city");
 const lblContinent = document.querySelector("#timezone-continent");
 const lblUTC = document.querySelector("#UTC");
@@ -14,7 +13,6 @@ function fillDropdown() {
     .then(res => res.forEach(data => {
       if (data.includes('/') && !data.includes("Etc")) {
         const dropdownOptions = document.createElement("option");
-
         const locationName = data.split("/");
 
         dropdownOptions.textContent = locationName[0] + " (" + locationName[1] + ")";
@@ -28,7 +26,6 @@ function worldtimeapiFetch() {
   fetch(url + dropdown.value)
     .then((res) => res.json())
     .then(res => {
-
       const locationName = res.timezone.split("/");
 
       lblTime.textContent = res.datetime.substring(11, 19);
